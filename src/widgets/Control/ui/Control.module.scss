@@ -1,0 +1,28 @@
+.control {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  translate: -50% 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 30px;
+
+  width: 100%;
+  height: var(--navbar-height);
+  background-color: var(--navbar-color);
+
+  .control_input {
+    display: flex;
+    gap: 5px;
+    flex-wrap: nowrap;
+
+    .control_input_radio {
+      accent-color: var(--radio-color);
+      width: 20px;
+      height: 20px;
+    }
+  }
+}
