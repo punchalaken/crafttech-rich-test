@@ -3,7 +3,7 @@
   gap: 20px;
 
   .tiptap {
-    background-color: rgb(214, 147, 147);
+    background-color: rgb(255, 255, 255);
     overflow: hidden;
     border: none;
     width: 100%;
@@ -20,7 +20,9 @@
   }
 
   .editor_config{
-
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
 }
 

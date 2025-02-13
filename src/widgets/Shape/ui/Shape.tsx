@@ -5,9 +5,11 @@ import { Group, Rect } from "react-konva";
 import { Html } from "react-konva-utils";
 import { ShapeProps } from "@app/types/ShapeProps";
 import { TextEditor } from "@widgets/TextEditor";
+import { throttle } from "lodash";
+import { subtractedValue } from "../consts/subtractedValue"
 
 const Shape: FC<ShapeProps> = (props) => {
-  const { x, y, width, height, tool, id, text } = props;
+  const { x, y, width, height, tool, id, text, stageRef} = props;
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
@@ -31,26 +33,26 @@ const Shape: FC<ShapeProps> = (props) => {
     }
 
     const shape = new Konva.Image({
-      x: 0.5,
-      y: 0.5,
-      scaleX: 1 / window.devicePixelRatio,
-      scaleY: 1 / window.devicePixelRatio,
+      x: 1,
+      y: 1,
+      width: width - subtractedValue,
+      height: height - subtractedValue,
       image: canvas,
     });
 
     groupRef.current?.add(shape);
     imageRef.current = shape;
     groupRef.current?.getLayer()?.batchDraw();
-  }, [id]);
+  }, [id, width, height]);
 
-
-  useEffect(() => {
-    renderImage();
-  }, [value, renderImage]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const throttleledRenderImage = useCallback(
+    throttle(() => renderImage(), 200), [renderImage]
+  );
 
   const handleClick = () => {
     if (tool === "cursor") {
-      setIsEditing(true);
+      setIsEditing(() => true);
     }
   };
 
@@ -60,6 +62,25 @@ const Shape: FC<ShapeProps> = (props) => {
       groupRef.current.attrs.y = e.target.attrs.y;
     }
   };
+
+  useEffect(() => {
+    const refItem = stageRef.current;
+    if (!refItem) return;
+  
+    const handleMouseUp = (): void => {
+      setIsEditing(false);
+    };
+  
+    refItem.addEventListener('mouseup', handleMouseUp);
+
+    return () => {
+      refItem.removeEventListener('mouseup');
+    };
+  }, []);
+
+  useEffect(() => {
+    throttleledRenderImage()
+  }, [value, throttleledRenderImage]);
 
   return (
     <>
