@@ -6,4 +6,5 @@ export interface TextEditorProps {
   width: number;
   ref: React.RefObject<HTMLDivElement>;
   id: string;
+  setChange: React.Dispatch<React.SetStateAction<boolean>>;
 }

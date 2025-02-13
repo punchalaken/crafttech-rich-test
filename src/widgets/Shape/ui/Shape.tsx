@@ -12,8 +12,8 @@ const Shape: FC<ShapeProps> = (props) => {
   const { x, y, width, height, tool, id, text, stageRef} = props;
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
-
   const [value, setValue] = useState<string>(text);
+  const [isChange, setChange] = useState<boolean>(false);
 
   const groupRef = useRef<Konva.Group>(null);
   const imageRef = useRef<Konva.Image | null>(null);
@@ -22,9 +22,6 @@ const Shape: FC<ShapeProps> = (props) => {
   const renderImage = useCallback(async (): Promise<void> => {
     const htmltext = document.getElementById(`htmltext_${id}`);
     if (!htmltext) return;
-
-    const innerhtml = htmltext.innerHTML;
-    if (!innerhtml) return;
 
     const canvas = await html2canvas(htmltext);
 
@@ -45,14 +42,13 @@ const Shape: FC<ShapeProps> = (props) => {
     groupRef.current?.getLayer()?.batchDraw();
   }, [id, width, height]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const throttleledRenderImage = useCallback(
     throttle(() => renderImage(), 200), [renderImage]
   );
 
   const handleClick = () => {
     if (tool === "cursor") {
-      setIsEditing(() => true);
+      setIsEditing(true);
     }
   };
 
@@ -80,7 +76,7 @@ const Shape: FC<ShapeProps> = (props) => {
 
   useEffect(() => {
     throttleledRenderImage()
-  }, [value, throttleledRenderImage]);
+  }, [value, throttleledRenderImage, isChange]);
 
   return (
     <>
@@ -103,6 +99,7 @@ const Shape: FC<ShapeProps> = (props) => {
               height={height}
               id={id}
               ref={htmlRef}
+              setChange={setChange}
             />
           </Html>
         )}

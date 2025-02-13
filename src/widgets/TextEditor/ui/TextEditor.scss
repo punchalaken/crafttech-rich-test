@@ -9,20 +9,22 @@
     width: 100%;
     height: 100%;
     margin: 1px 0 0 1px;
-  
+
     &:focus {
       outline: none;
     }
-  
     p {
       margin: 5px 0 0 4px;
     }
   }
-
   .editor_config{
     display: flex;
     flex-direction: column;
     gap: 10px;
+    
+    .editor_size{
+        width: 40px;
+    }
   }
 }
 
